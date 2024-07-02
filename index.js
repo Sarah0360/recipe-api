@@ -12,12 +12,14 @@ await mongoose.connect(process.env.MONGO_URL);
 const app = express();
 
 expressOasGenerator.handleResponses(app, {
+    alwaysServeDocs: true,
     tags: ['categories', 'recipes'],
     mongooseModels: mongoose.modelNames(),
 });
 
 // Apply Middlewares (must come before route; app.use)
 app.use(express.json());
+app.use(express.static('uploads')); // aids in creating a url for images for acessability.
 
 
 //Use routes

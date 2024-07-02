@@ -1,5 +1,5 @@
 import { model, Schema, Types } from "mongoose";
-import normalize from "normalize-mongoose";
+import { toJSON } from "@reis/mongoose-to-json";
 
 const recipeSchema = new Schema({
     name: {type: String, unique: true, required: true}, //validation ; unique:true /required: true (means it won't take a number)
@@ -12,6 +12,6 @@ const recipeSchema = new Schema({
     timestamps:true //help to keep records using createdAt/UpdatedAt
 });
 
-recipeSchema.plugin(normalize);
+recipeSchema.plugin(toJSON);
 
 export const RecipeModel = model('Recipe', recipeSchema); // the 'model' allows one to .create, .find ,etc

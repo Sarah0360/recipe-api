@@ -4,8 +4,13 @@ import { RecipeModel } from "../models/recipe.js";
 
 export const getRecipes = async (req, res, next) => {
     try {
-        // Get all recipes from database
-        const allRecipes = await RecipeModel.find();
+        // Get Query Params
+        const {limit, skip, search} = req.query;
+        // Get all recipes from database 
+        const allRecipes = await RecipeModel
+        .find({name: search})
+        .limit(limit) //you can limit it to 10 or any number=>.limit(limit || 10)
+        .skip(skip);
         // Return all recipes as response
         res.json(allRecipes);
     } catch (error) {
@@ -17,7 +22,10 @@ export const getRecipes = async (req, res, next) => {
 export const postRecipe = async (req, res, next) => {
     try {
         // Add recipe to database
-        const newRecipe = await RecipeModel.create(req.body);
+        const newRecipe = await RecipeModel.create({
+            ...req.body,
+            image: req.file.filename
+        });
         // Return response
         res.json(newRecipe);
     } catch (error) {
