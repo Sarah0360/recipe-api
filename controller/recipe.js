@@ -22,17 +22,16 @@ export const getRecipes = async (req, res, next) => {
 export const postRecipe = async (req, res, next) => {
     try {
         // Add recipe to database
-        const newRecipe = await RecipeModel.create({
-            ...req.body,
-            image: req.file.filename
-        });
+        const newRecipe = await RecipeModel.create(req.body);
         // Return response
         res.json(newRecipe);
     } catch (error) {
         next(error);
     }
 };
-
+// ,
+//         image: req.file.filename
+            
 // Patch recipe
 // export const patchRecipe = (req, res) => {
 //     res.json(`Recipe with ID ${req.params.id} Updated`);
@@ -42,9 +41,9 @@ export const postRecipe = async (req, res, next) => {
 export const patchRecipe = async(req, res, next) => {
     try {
         //Update recipe by id
-        const  UpdatedRecipe = await RecipeModel.findByIdAndUpdate(req,params.id, req.body, {new: true});
+        const  updatedRecipe = await RecipeModel.findByIdAndUpdate(req.params.id, req.body, {new: true});
         //Return response
-        res.json(UpdatedRecipe);
+        res.json(updatedRecipe);
     } catch (error) {
         next(error);
     }

@@ -1,8 +1,11 @@
 import express from "express";
+import cors from "cors";
 import mongoose from "mongoose";
 import expressOasGenerator from "express-oas-generator";
+import session from "express-session";
 import recipesRouter from "./routes/recipe.js";
 import categoryRouter from "./routes/category.js";
+import userRouter from "./routes/user.js";
 
 
 // Connect to Database
@@ -18,11 +21,20 @@ expressOasGenerator.handleResponses(app, {
 });
 
 // Apply Middlewares (must come before route; app.use)
+app.use(cors());
 app.use(express.json());
-app.use(express.static('uploads')); // aids in creating a url for images for acessability.
+// app.use(express.static('uploads'));
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true }
+}));
+// aids in creating a url for images for acessability.
 
 
 //Use routes
+app.use(userRouter);
 app.use(recipesRouter);
 app.use(categoryRouter);
 expressOasGenerator.handleRequests();
