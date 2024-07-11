@@ -3,6 +3,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import expressOasGenerator from "express-oas-generator";
 import session from "express-session";
+import MongoStore from "connect-mongo";
 import recipesRouter from "./routes/recipe.js";
 import categoryRouter from "./routes/category.js";
 import userRouter from "./routes/user.js";
@@ -10,6 +11,9 @@ import userRouter from "./routes/user.js";
 
 // Connect to Database
 await mongoose.connect(process.env.MONGO_URL);
+
+// Create A Session Store
+
 
 // Create Express App step 1
 const app = express();
@@ -28,10 +32,13 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: true }
+    // cookie: { secure: true }
+    store:MongoStore.create({
+        mongoUrl: process.env.MONGO_URL
+    })
 }));
 // aids in creating a url for images for acessability.
-
+ 
 
 //Use routes
 app.use(userRouter);
